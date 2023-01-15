@@ -32,17 +32,25 @@ import java.lang.reflect.Field;
  */
 public class Main {
 
-    public static void main(String[] args) {
-        printDeclaredFieldInfo(Category.class);
+    public static void main(String[] args) throws IllegalAccessException, NoSuchFieldException {
+        Movie movie = new Movie("Lord of Rings", 2001, 12.99, true,
+                Category.ADVENTURE);
+
+        printDeclaredFieldInfo(Movie.class, movie);
+
+        Field minPriceStaticFiled = Movie.class.getDeclaredField("MINIMUM_PRICE");
+
+        System.out.println(String.format("static MINIMUM_PRICE value : %f", minPriceStaticFiled.get(null)));
     }
 
-    public static void printDeclaredFieldInfo(Class<?> clas) {
+    public static <T> void printDeclaredFieldInfo(Class<? extends T> clas, T instance) throws IllegalAccessException {
         for (Field field : clas.getDeclaredFields()) {
             System.out.println(String.format("Field Name : %s, type : %s",
                     field.getName(),
                     field.getType().getName()));
 
             System.out.println(String.format("Is synthetic field : %s", field.isSynthetic()));
+            System.out.println(String.format("Field value is : %s", field.get(instance)));
 
             System.out.println();
         }
